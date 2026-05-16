@@ -21,7 +21,7 @@ const Brand = () => {
 
                 loop={true}
                 autoplay={{
-                    delay: 1500, // between slides
+                    delay: 2500, // between slides
                     disableOnInteraction: false,
                     waitForTransition: false,
                 }}
