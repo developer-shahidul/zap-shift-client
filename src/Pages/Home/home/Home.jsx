@@ -6,8 +6,8 @@ import HighLight from "../highLight/HighLight";
 import MerchantPromo from "../MerchantPromo/MerchantPromo";
 import Reviews from "../Reviews/Reviews";
 import HelpAccordion from "../helpAccordion/HelpAccordion";
-const reviewsPromise = fetch("../../../../public/data/reviews.json").then(
-  (res) => res.json(),
+const reviewsPromise = fetch("../../../../data/reviews.json").then((res) =>
+  res.json(),
 );
 
 const Home = () => {
