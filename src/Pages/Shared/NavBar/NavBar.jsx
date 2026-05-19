@@ -67,9 +67,8 @@ const NavBar = () => {
             {links}
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">
-          <Logo></Logo>
-        </a>
+        {/* <a className="btn btn-ghost text-xl"> */}
+        <Logo></Logo>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{links}</ul>
@@ -77,7 +76,7 @@ const NavBar = () => {
       <div className="navbar-end">
         <div className="flex items-center justify-center">
           <button className="btn bg-[#CAEB66] rounded-xl">Be a rider</button>
-          <button className="rounded-full h-11 w-11 flex items-center justify-center  bg-black text-[#CAEB66] text-xl">
+          <button className="rounded-full h-10 w-10 flex items-center justify-center  bg-black text-[#CAEB66] text-xl">
             <MdArrowOutward />
           </button>
         </div>
