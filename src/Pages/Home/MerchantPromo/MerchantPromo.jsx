@@ -1,13 +1,18 @@
 import marChantImg from "../../../assets/pic_icon/location-merchant.png";
+import bgImg from "../../../assets/pic_icon/be-a-merchant-bg.png";
 const MerchantPromo = () => {
   return (
     <div>
-      <section className="p-20 bg-[#063B3B] rounded-[30px] mt-20 overflow-hidden ">
-        <div
-          className="
-          relative
-        "
-        >
+      <section
+        style={{
+          backgroundImage: `url(${bgImg})`,
+          backgroundSize: "100%  36%",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "top center",
+        }}
+        className="p-20 bg-[#063B3B] rounded-[30px] mt-20 overflow-hidden "
+      >
+        <div className="relative ">
           {/* CONTENT */}
           <div className=" z-10 max-w-167">
             <h1 className="text-white text-[40px] font-bold leading-tight">

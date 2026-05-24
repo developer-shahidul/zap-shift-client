@@ -7,7 +7,7 @@ const NavBar = () => {
   const navStyle = ({ isActive }) =>
     isActive
       ? "bg-[#CAEB66] text-[#606060] rounded-[50px] px-4 py-2"
-      : " text-[#606060]";
+      : " text-[#606060] rounded-[50px] px-4 py-2";
 
   const links = (
     <>
