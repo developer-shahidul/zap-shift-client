@@ -29,19 +29,16 @@ const Login = () => {
               {/* <input {...register("exampleRequired", { required: true })} /> */}
 
               <input
-                {...register("exampleRequired", { required: true })}
                 type="email"
                 placeholder="Email"
                 className="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
                 // value={email}
                 // onChange={(e) => setEmail(e.target.value)}
-                {...register("email", { required: "email is required" })}
+                {...register("email", { required: true })}
+                autoComplete="email"
               />
-
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.email.message}
-                </p>
+              {errors.email?.type === "required" && (
+                <p className="text-red-500 text-sm mt-1">email is required</p>
               )}
             </div>
 
@@ -54,7 +51,31 @@ const Login = () => {
                 className="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
                 // value={password}
                 // onChange={(e) => setPassword(e.target.value)}
+                autoComplete="password"
+                {...register("password", {
+                  required: true,
+                  minLength: {
+                    value: 6,
+                    message: "password must be at last 6 cheracters",
+                  },
+                  pattern:
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+                })}
               />
+              {errors.password?.type === "required" && (
+                <p className="text-red-500 text-sm mt-1">passwor is requird</p>
+              )}
+              {errors.password?.type === "minLength" && (
+                <p className="text-red-500 text-sm mt-1">
+                  password must be at last 6 cheracters
+                </p>
+              )}
+              {errors.password?.type === "pattern" && (
+                <p className="text-red-500 text-sm mt-1">
+                  "Password must contain uppercase, lowercase, number, special
+                  character and be at least 6 characters",
+                </p>
+              )}
             </div>
 
             {/* Forgot */}

@@ -5,7 +5,7 @@ import Logo from "../Components/Logo/Logo";
 const AuthLayout = () => {
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="grid grid-cols-2 min-h-screen ">
+      <div className="grid md:grid-cols-2 grid-rows-1 min-h-screen ">
         <div className=" bg-gray-50 pt-11">
           <Logo></Logo>
           <Outlet></Outlet>
