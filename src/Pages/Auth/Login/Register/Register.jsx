@@ -2,17 +2,31 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaUserCircle } from "react-icons/fa";
 import { GoArrowUp } from "react-icons/go";
+import useAuth from "../../../../hooks/useAuth";
+import { updateProfile } from "firebase/auth";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { handleRegisterUser } = useAuth();
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
 
-  const handleRegister = (data) => {
-    return console.log(data);
+  const handleRegister = async (data) => {
+    try {
+      const result = await handleRegisterUser(data.email, data.password);
+
+      await updateProfile(result.user, {
+        displayName: data.name,
+        photoURL: data.photo,
+      });
+
+      console.log("User Created:", result.user);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

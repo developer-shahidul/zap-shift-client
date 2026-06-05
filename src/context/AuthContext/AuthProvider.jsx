@@ -13,18 +13,18 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = (email, password) => {
+  const handleRegisterUser = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  const handleLogIn = (email, password) => {
+  const handleLogInUser = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
   const authInfo = {
-    handleLogIn,
-    handleRegister,
+    handleLogInUser,
+    handleRegisterUser,
     loading,
     setLoading,
     user,
