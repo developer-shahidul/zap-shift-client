@@ -1,8 +1,20 @@
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import Logo from "../../../Components/Logo/Logo";
 import { MdArrowOutward } from "react-icons/md";
+import useAuth from "../../../hooks/useAuth";
 
 const NavBar = () => {
+  const { logOutUser, user } = useAuth();
+
+  //signOut
+  const handleLogOut = () => {
+    logOutUser()
+      .then()
+      .catch((error) =>
+        console.log("Failed to log out. Please try again.", error),
+      );
+  };
+
   // NavLink এর ভিতরে className prop function আকারে ব্যবহার করলে React Router নিজে থেকে isActive দেয়।
   const navStyle = ({ isActive }) =>
     isActive
@@ -73,8 +85,20 @@ const NavBar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{links}</ul>
       </div>
+
       <div className="navbar-end">
         <div className="flex items-center justify-center">
+          <div className="mr-4">
+            {user ? (
+              <a onClick={handleLogOut} className="btn  rounded-xl">
+                sign out
+              </a>
+            ) : (
+              <Link to={"/login"} className="btn  rounded-xl">
+                sign In
+              </Link>
+            )}
+          </div>
           <button className="btn bg-[#CAEB66] rounded-xl">Be a rider</button>
           <button className="rounded-full h-10 w-10 flex items-center justify-center  bg-black text-[#CAEB66] text-xl">
             <MdArrowOutward />

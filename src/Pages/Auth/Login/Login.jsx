@@ -1,8 +1,11 @@
 import { useForm } from "react-hook-form";
 import useAuth from "../../../hooks/useAuth";
+import { Link, useNavigate } from "react-router";
+import SocialLogIn from "../socialLogIn/SocialLogIn";
 
 const Login = () => {
   const { handleLogInUser } = useAuth();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -13,10 +16,12 @@ const Login = () => {
     console.log(data);
     handleLogInUser(data.email, data.password)
       .then((result) => {
+        navigate("/");
         console.log(result.user);
       })
       .catch((error) => console.log(error));
   };
+
   return (
     <div>
       <div className="min-h-screen flex items-center  lg:w-[384px] h-auto mx-auto ">
@@ -107,9 +112,9 @@ const Login = () => {
           {/* Register */}
           <p className="text-center text-sm mt-4">
             Don’t have an account?{" "}
-            <a href="#" className="text-green-500 font-medium">
+            <Link to={"/register"} className="text-green-500 font-medium">
               Register
-            </a>
+            </Link>
           </p>
 
           {/* Divider */}
@@ -120,17 +125,7 @@ const Login = () => {
           </div>
 
           {/* Google Login */}
-          <button
-            // onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-2 border py-3 rounded-lg hover:bg-gray-100"
-          >
-            <img
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              className="w-5 h-5"
-              alt="google"
-            />
-            Login with Google
-          </button>
+          <SocialLogIn></SocialLogIn>
         </div>
       </div>
     </div>

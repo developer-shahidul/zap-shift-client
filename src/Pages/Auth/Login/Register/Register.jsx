@@ -4,10 +4,13 @@ import { FaUserCircle } from "react-icons/fa";
 import { GoArrowUp } from "react-icons/go";
 import useAuth from "../../../../hooks/useAuth";
 import { updateProfile } from "firebase/auth";
+import { Link, useNavigate } from "react-router";
+import SocialLogIn from "../../socialLogIn/SocialLogIn";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { handleRegisterUser } = useAuth();
+  const navigate = useNavigate();
   const {
     handleSubmit,
     register,
@@ -22,7 +25,7 @@ const Register = () => {
         displayName: data.name,
         photoURL: data.photo,
       });
-
+      navigate("/login");
       console.log("User Created:", result.user);
     } catch (error) {
       console.log(error);
@@ -162,6 +165,13 @@ const Register = () => {
             </button>
           </form>
 
+          <p className="text-center text-sm mt-4">
+            Alredy have an account?{" "}
+            <Link to={"/login"} className="text-green-500 font-medium">
+              Login
+            </Link>
+          </p>
+
           {/* Divider */}
           <div className="flex items-center my-5">
             <div className="flex-1 border-t"></div>
@@ -172,17 +182,7 @@ const Register = () => {
           </div>
 
           {/* Google Login */}
-          <button
-            // onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-2 border py-3 rounded-lg hover:bg-gray-100"
-          >
-            <img
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              className="w-5 h-5"
-              alt="google"
-            />
-            Login with Google
-          </button>
+          <SocialLogIn></SocialLogIn>
         </div>
       </div>
     </div>
