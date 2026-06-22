@@ -7,6 +7,8 @@ import Error from "../Pages/Error/Error";
 import AuthLayout from "../layout/AuthLayout";
 import Login from "../Pages/Auth/Login/Login";
 import Register from "../Pages/Auth/Login/Register/Register";
+import PrivateRoute from "../routes/PrivateRoute";
+import Rider from "../Pages/rider/Rider";
 
 const Router = createBrowserRouter([
   {
@@ -17,6 +19,14 @@ const Router = createBrowserRouter([
       {
         index: true,
         Component: Home,
+      },
+      {
+        path: "/rider",
+        element: (
+          <PrivateRoute>
+            <Rider></Rider>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/coverage",

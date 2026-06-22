@@ -44,7 +44,7 @@ const NavBar = () => {
         </NavLink>
       </li>
       <li>
-        <NavLink className={navStyle} to={"/raider"}>
+        <NavLink className={navStyle} to={"/rider"}>
           Be a Rider
         </NavLink>
       </li>
@@ -99,10 +99,12 @@ const NavBar = () => {
               </Link>
             )}
           </div>
-          <button className="btn bg-[#CAEB66] rounded-xl">Be a rider</button>
-          <button className="rounded-full h-10 w-10 flex items-center justify-center  bg-black text-[#CAEB66] text-xl">
-            <MdArrowOutward />
-          </button>
+          <Link to={"/rider"} className="flex justify-center">
+            <button className="btn bg-[#CAEB66] rounded-xl">Be a rider</button>
+            <button className="rounded-full h-10 w-10 flex items-center justify-center  bg-black text-[#CAEB66] text-xl">
+              <MdArrowOutward />
+            </button>
+          </Link>
         </div>
       </div>
     </div>

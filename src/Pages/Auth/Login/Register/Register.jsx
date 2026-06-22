@@ -3,14 +3,16 @@ import { useForm } from "react-hook-form";
 import { FaUserCircle } from "react-icons/fa";
 import { GoArrowUp } from "react-icons/go";
 import useAuth from "../../../../hooks/useAuth";
-import { updateProfile } from "firebase/auth";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import SocialLogIn from "../../socialLogIn/SocialLogIn";
+import axios from "axios";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { handleRegisterUser } = useAuth();
+  const { handleRegisterUser, updateUserProfile } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
+  console.log(location.state);
   const {
     handleSubmit,
     register,
@@ -18,18 +20,39 @@ const Register = () => {
   } = useForm();
 
   const handleRegister = async (data) => {
-    try {
-      const result = await handleRegisterUser(data.email, data.password);
+    console.log("after register", data.photo[0]);
 
-      await updateProfile(result.user, {
-        displayName: data.name,
-        photoURL: data.photo,
-      });
-      navigate("/login");
-      console.log("User Created:", result.user);
-    } catch (error) {
-      console.log(error);
-    }
+    const profileImg = data.photo[0];
+
+    handleRegisterUser(data.email, data.password)
+      .then((result) => {
+        console.log(result.user);
+        // store the img and the photo url
+        const formData = new FormData();
+        formData.append("image", profileImg);
+
+        axios
+          .post(
+            `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`,
+            formData,
+          )
+          .then((res) => {
+            console.log("after img upload", res.data.data.url);
+
+            // update user profile
+            const userProfile = {
+              displayName: data.name,
+              photoURL: res.data.data.url,
+            };
+
+            updateUserProfile(userProfile)
+              .then(() => console.log("user profile updated done"))
+              .catch((error) => console.log(error));
+
+            navigate(location?.state || "/");
+          });
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -78,19 +101,19 @@ const Register = () => {
               <label className="text-sm font-medium">Photo URL</label>
 
               <input
-                type="text"
+                type="file"
                 placeholder="Photo URL"
                 className="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400"
-                // {...register("photo", {
-                //   required: "Photo URL is required",
-                // })}
+                {...register("photo", {
+                  required: true,
+                })}
               />
 
-              {/* {errors.photo && (
+              {errors.photo?.type === "required" && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.photo.message}
+                  Photo URL is required
                 </p>
-              )} */}
+              )}
             </div>
 
             {/* Email */}
@@ -167,7 +190,11 @@ const Register = () => {
 
           <p className="text-center text-sm mt-4">
             Alredy have an account?{" "}
-            <Link to={"/login"} className="text-green-500 font-medium">
+            <Link
+              to={"/login"}
+              state={location.state}
+              className="text-green-500 font-medium"
+            >
               Login
             </Link>
           </p>
