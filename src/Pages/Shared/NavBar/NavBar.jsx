@@ -34,6 +34,11 @@ const NavBar = () => {
         </NavLink>
       </li>
       <li>
+        <NavLink className={navStyle} to={"/send-percel"}>
+          Send Percel
+        </NavLink>
+      </li>
+      <li>
         <NavLink className={navStyle} to={"/about"}>
           About Us
         </NavLink>
