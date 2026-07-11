@@ -2,21 +2,33 @@ import { useForm } from "react-hook-form";
 import { useLoaderData } from "react-router";
 
 const SendPercel = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
   const serviceCenters = useLoaderData();
   const regionsDublicate = serviceCenters.map((c) => c.region);
   // dublicate thakbe na , akta nam akbar oi ashbe
   const region = [...new Set(regionsDublicate)];
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const senderRegion = watch("yourRegion");
+  const reciverRegions = watch("reciverRegion");
+
+  const districtByRegion = (region) => {
+    if (!region) return [];
+
+    const regionByDistricts = serviceCenters.filter((c) => c.region === region);
+    const districts = regionByDistricts.map((d) => d.district);
+    return districts;
+  };
 
   const handleSendPercel = (data) => {
     console.log(data);
   };
   return (
-    <div className="px-27.95 py-20 my-40">
+    <div className="px-27.95 py-20 my-20 rounded-4xl bg-white">
       <div>
         <h2 className="text-[56px] text-[#03373D] font-extrabold mb-12.5">
           Send A Parcel
@@ -169,19 +181,41 @@ const SendPercel = () => {
               </div>
               <div className="w-full">
                 <label className="text-sm font-medium text-[#0F172A]">
-                  Your District
+                  Your Region
                 </label>
 
                 <select
                   placeholder="Your District"
                   className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
                   defaultValue={"pckup a region"}
-                  {...register("district", {
+                  {...register("yourRegion", {
                     required: true,
                   })}
                 >
                   {region.map((r) => (
-                    <option key={r}>{r}</option>
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="w-full">
+                <label className="text-sm font-medium text-[#0F172A]">
+                  Your District
+                </label>
+
+                <select
+                  placeholder="Your District"
+                  className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
+                  defaultValue={"pckup a district"}
+                  {...register("yourDistrict", {
+                    required: true,
+                  })}
+                >
+                  {districtByRegion(senderRegion).map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -263,6 +297,25 @@ const SendPercel = () => {
               </div>
               <div className="w-full">
                 <label className="text-sm font-medium text-[#0F172A]">
+                  Receiver Religion
+                </label>
+                <select
+                  placeholder="Reciver District"
+                  className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
+                  {...register("reciverRegion", {
+                    required: true,
+                  })}
+                  defaultValue={"pckup a region"}
+                >
+                  {region.map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="w-full">
+                <label className="text-sm font-medium text-[#0F172A]">
                   Receiver District
                 </label>
                 <select
@@ -271,10 +324,12 @@ const SendPercel = () => {
                   {...register("reciverDistrict", {
                     required: true,
                   })}
-                  defaultValue={"pckup a region"}
+                  defaultValue={"pckup a districts"}
                 >
-                  {region.map((r) => (
-                    <option key={r}>{r}</option>
+                  {districtByRegion(reciverRegions).map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
                   ))}
                 </select>
               </div>
