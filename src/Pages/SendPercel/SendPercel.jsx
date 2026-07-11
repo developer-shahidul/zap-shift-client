@@ -1,11 +1,11 @@
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useLoaderData } from "react-router";
 
 const SendPercel = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm();
 
@@ -13,8 +13,8 @@ const SendPercel = () => {
   const regionsDublicate = serviceCenters.map((c) => c.region);
   // dublicate thakbe na , akta nam akbar oi ashbe
   const region = [...new Set(regionsDublicate)];
-  const senderRegion = watch("yourRegion");
-  const reciverRegions = watch("reciverRegion");
+  const senderRegion = useWatch({ control, name: "yourRegion" });
+  const reciverRegions = useWatch({ control, name: "reciverRegion" });
 
   const districtByRegion = (region) => {
     if (!region) return [];
@@ -26,9 +26,11 @@ const SendPercel = () => {
 
   const handleSendPercel = (data) => {
     console.log(data);
+    const sameDistrict = data.yourDistrict === data.reciverDistrict;
+    console.log(sameDistrict);
   };
   return (
-    <div className="px-27.95 py-20 my-20 rounded-4xl bg-white">
+    <div className="md:px-27 py-20 my-20 rounded-4xl bg-white shadow">
       <div>
         <h2 className="text-[56px] text-[#03373D] font-extrabold mb-12.5">
           Send A Parcel
@@ -134,7 +136,7 @@ const SendPercel = () => {
                     required: true,
                   })}
                 />
-              </div>{" "}
+              </div>
               <div className="w-full">
                 <label className="text-sm font-medium text-[#0F172A]">
                   Sender Email
@@ -151,7 +153,7 @@ const SendPercel = () => {
                 {errors.senderEmail?.type === "required" && (
                   <p className="text-red-500 text-sm mt-1">email is required</p>
                 )}
-              </div>{" "}
+              </div>
               <div className="w-full">
                 <label className="text-sm font-medium text-[#0F172A]">
                   Address
@@ -164,7 +166,7 @@ const SendPercel = () => {
                     required: true,
                   })}
                 />
-              </div>{" "}
+              </div>
               <div className="w-full">
                 <label className="text-sm font-medium text-[#0F172A]">
                   Sender Phone No
@@ -187,11 +189,14 @@ const SendPercel = () => {
                 <select
                   placeholder="Your District"
                   className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
-                  defaultValue={"pckup a region"}
+                  defaultValue={"Pick a region"}
                   {...register("yourRegion", {
                     required: true,
                   })}
                 >
+                  <option disabled={true} selected>
+                    Pick a region
+                  </option>
                   {region.map((r) => (
                     <option key={r} value={r}>
                       {r}
@@ -207,11 +212,14 @@ const SendPercel = () => {
                 <select
                   placeholder="Your District"
                   className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
-                  defaultValue={"pckup a district"}
+                  defaultValue={"pick a district"}
                   {...register("yourDistrict", {
                     required: true,
                   })}
                 >
+                  <option disabled={true} selected>
+                    Pick a district
+                  </option>
                   {districtByRegion(senderRegion).map((r) => (
                     <option key={r} value={r}>
                       {r}
@@ -250,7 +258,7 @@ const SendPercel = () => {
                     required: true,
                   })}
                 />
-              </div>{" "}
+              </div>
               <div className="w-full">
                 <label className="text-sm font-medium text-[#0F172A]">
                   Reciver Email
@@ -267,7 +275,7 @@ const SendPercel = () => {
                 {errors.reciverEmail?.type === "required" && (
                   <p className="text-red-500 text-sm mt-1">email is required</p>
                 )}
-              </div>{" "}
+              </div>
               <div className="w-full">
                 <label className="text-sm font-medium text-[#0F172A]">
                   Receiver Address
@@ -280,7 +288,7 @@ const SendPercel = () => {
                     required: true,
                   })}
                 />
-              </div>{" "}
+              </div>
               <div className="w-full">
                 <label className="text-sm font-medium text-[#0F172A]">
                   Receiver Phone No
@@ -305,8 +313,11 @@ const SendPercel = () => {
                   {...register("reciverRegion", {
                     required: true,
                   })}
-                  defaultValue={"pckup a region"}
+                  defaultValue={"pick a region"}
                 >
+                  <option disabled={true} selected>
+                    Pick a region
+                  </option>
                   {region.map((r) => (
                     <option key={r} value={r}>
                       {r}
@@ -324,8 +335,11 @@ const SendPercel = () => {
                   {...register("reciverDistrict", {
                     required: true,
                   })}
-                  defaultValue={"pckup a districts"}
+                  defaultValue={"pick a district"}
                 >
+                  <option disabled={true} selected>
+                    Pick a district
+                  </option>
                   {districtByRegion(reciverRegions).map((r) => (
                     <option key={r} value={r}>
                       {r}
