@@ -1,5 +1,6 @@
 import { useForm, useWatch } from "react-hook-form";
 import { useLoaderData } from "react-router";
+import Swal from "sweetalert2";
 
 const SendPercel = () => {
   const {
@@ -25,9 +26,42 @@ const SendPercel = () => {
   };
 
   const handleSendPercel = (data) => {
-    console.log(data);
-    const sameDistrict = data.yourDistrict === data.reciverDistrict;
-    console.log(sameDistrict);
+    const isDocument = data.percelType === "document";
+    const isSameDistrict = data.yourDistrict === data.reciverDistrict;
+    const percelWeight = parseFloat(data.percelWeight);
+
+    let cost = 0;
+    if (isDocument) {
+      cost = isSameDistrict ? 60 : 80;
+    } else {
+      if (percelWeight < 3) {
+        cost = isSameDistrict ? 110 : 150;
+      } else {
+        const minCharage = isSameDistrict ? 110 : 150;
+        const extraWeight = percelWeight - 3;
+        const extraCharge = isSameDistrict
+          ? extraWeight * 40
+          : extraWeight * 80;
+        cost = minCharage + extraCharge;
+      }
+    }
+    console.log("cost", cost);
+    Swal.fire({
+      title: "Agree with the cost?",
+      text: `You will be charge ${cost} taka!`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "I agree!",
+    }).then((result) => {
+      if (result.isConfirmed)
+        Swal.fire({
+          title: "Success",
+          text: "Your file has been successed.",
+          icon: "success",
+        });
+    });
   };
   return (
     <div className="md:px-27 py-20 my-20 rounded-4xl bg-white shadow">
