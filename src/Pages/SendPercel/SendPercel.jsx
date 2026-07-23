@@ -1,6 +1,8 @@
 import { useForm, useWatch } from "react-hook-form";
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAuth from "../../hooks/useAuth";
 
 const SendPercel = () => {
   const {
@@ -10,12 +12,15 @@ const SendPercel = () => {
     formState: { errors },
   } = useForm();
 
+  const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
+
   const serviceCenters = useLoaderData();
   const regionsDublicate = serviceCenters.map((c) => c.region);
   // dublicate thakbe na , akta nam akbar oi ashbe
   const region = [...new Set(regionsDublicate)];
-  const senderRegion = useWatch({ control, name: "yourRegion" });
-  const reciverRegions = useWatch({ control, name: "reciverRegion" });
+  const senderRegion = useWatch({ control, name: "senderRegion" });
+  const receiverRegions = useWatch({ control, name: "receiverRegion" });
 
   const districtByRegion = (region) => {
     if (!region) return [];
@@ -27,7 +32,7 @@ const SendPercel = () => {
 
   const handleSendPercel = (data) => {
     const isDocument = data.percelType === "document";
-    const isSameDistrict = data.yourDistrict === data.reciverDistrict;
+    const isSameDistrict = data.senderDistrict === data.receiverDistrict;
     const percelWeight = parseFloat(data.percelWeight);
 
     let cost = 0;
@@ -56,11 +61,17 @@ const SendPercel = () => {
       confirmButtonText: "I agree!",
     }).then((result) => {
       if (result.isConfirmed)
-        Swal.fire({
-          title: "Success",
-          text: "Your file has been successed.",
-          icon: "success",
-        });
+        // save the parcel info to the database
+
+        axiosSecure
+          .post("/parcels", data)
+          .then((res) => console.log("after saving parcel ", res.data));
+
+      // Swal.fire({
+      //   title: "Success",
+      //   text: "Your file has been successed.",
+      //   icon: "success",
+      // });
     });
   };
   return (
@@ -166,6 +177,7 @@ const SendPercel = () => {
                   type="text"
                   placeholder="Sender Name"
                   className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
+                  defaultValue={user?.displayName}
                   {...register("senderName", {
                     required: true,
                   })}
@@ -180,6 +192,7 @@ const SendPercel = () => {
                   placeholder="Sender Email"
                   className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
                   autoComplete="email"
+                  defaultValue={user?.email}
                   {...register("senderEmail", {
                     required: true,
                   })}
@@ -221,10 +234,10 @@ const SendPercel = () => {
                 </label>
 
                 <select
-                  placeholder="Your District"
+                  placeholder="Your  District"
                   className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
                   defaultValue={"Pick a region"}
-                  {...register("yourRegion", {
+                  {...register("senderRegion", {
                     required: true,
                   })}
                 >
@@ -247,7 +260,7 @@ const SendPercel = () => {
                   placeholder="Your District"
                   className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
                   defaultValue={"pick a district"}
-                  {...register("yourDistrict", {
+                  {...register("senderDistrict", {
                     required: true,
                   })}
                 >
@@ -295,18 +308,18 @@ const SendPercel = () => {
               </div>
               <div className="w-full">
                 <label className="text-sm font-medium text-[#0F172A]">
-                  Reciver Email
+                  Receiver Email
                 </label>
                 <input
                   type="email"
                   placeholder="Reciver Email"
                   className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
                   autoComplete="email"
-                  {...register("reciverEmail", {
+                  {...register("receiverEmail", {
                     required: true,
                   })}
                 />
-                {errors.reciverEmail?.type === "required" && (
+                {errors.receiverEmail?.type === "required" && (
                   <p className="text-red-500 text-sm mt-1">email is required</p>
                 )}
               </div>
@@ -339,12 +352,12 @@ const SendPercel = () => {
               </div>
               <div className="w-full">
                 <label className="text-sm font-medium text-[#0F172A]">
-                  Receiver Religion
+                  Receiver Region
                 </label>
                 <select
                   placeholder="Reciver District"
                   className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
-                  {...register("reciverRegion", {
+                  {...register("receiverRegion", {
                     required: true,
                   })}
                   defaultValue={"pick a region"}
@@ -366,7 +379,7 @@ const SendPercel = () => {
                 <select
                   placeholder="Reciver District"
                   className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
-                  {...register("reciverDistrict", {
+                  {...register("receiverDistrict", {
                     required: true,
                   })}
                   defaultValue={"pick a district"}
@@ -374,7 +387,7 @@ const SendPercel = () => {
                   <option disabled={true} selected>
                     Pick a district
                   </option>
-                  {districtByRegion(reciverRegions).map((r) => (
+                  {districtByRegion(receiverRegions).map((r) => (
                     <option key={r} value={r}>
                       {r}
                     </option>
