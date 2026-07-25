@@ -55,7 +55,7 @@ const DashboardLayout = () => {
     },
   ];
 
-  const genaralMenu = [
+  const generalMenu = [
     {
       path: "/dashboard/setting",
       icon: <HiOutlineCog6Tooth />,
@@ -71,19 +71,20 @@ const DashboardLayout = () => {
       icon: <HiOutlineQuestionMarkCircle />,
       label: "Help",
     },
-    {
-      path: "/dashboard/logout",
-      icon: <HiOutlineArrowRightOnRectangle />,
-      label: "Logout",
-    },
   ];
+
+  // লগআউট হ্যান্ডেল
+  const handleLogout = () => {
+    // লগআউট লজিক
+    console.log("Logout clicked");
+  };
 
   return (
     <div className="flex min-h-screen bg-[#F5F5F5]">
       {/* Overlay (মোবাইলের জন্য) */}
       {open && (
         <div
-          className="fixed inset-0 lg:hidden  z-40"
+          className="fixed inset-0 z-40 lg:hidden  "
           onClick={() => setOpen(false)}
         />
       )}
@@ -91,7 +92,7 @@ const DashboardLayout = () => {
       {/* ===== Sidebar ===== */}
       <aside
         className={`bg-white p-6 h-screen fixed  top-0 left-0 lg:static transform transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}
-        lg:translate-x-0`}
+        lg:translate-x-0 lg:z-auto z-50`}
       >
         <div>
           <Logo></Logo>
@@ -106,7 +107,16 @@ const DashboardLayout = () => {
               <li key={menu?.label}>
                 <NavLink
                   to={menu?.path}
-                  className="flex gap-2 px-3 py-2 items-center"
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) =>
+                    `flex gap-2 px-3 py-2 items-center
+                  ${
+                    isActive
+                      ? "bg-[#CAEB66] text-[#03373D] font-semibold rounded-xl"
+                      : "text-[#606060] hover:bg-gray-100 hover:text-[#03373D]"
+                  }
+                  `
+                  }
                 >
                   <span className="text-xl"> {menu?.icon}</span>
                   <span className="text-sm text-[#606060] font-medium">
@@ -120,11 +130,18 @@ const DashboardLayout = () => {
               <h3 className="text-sm font-medium text-[#151726]">Genaral</h3>
             </li>
 
-            {genaralMenu?.map((menu) => (
+            {generalMenu?.map((menu) => (
               <li key={menu?.label}>
                 <NavLink
+                  onClick={() => setOpen(false)}
                   to={menu?.path}
-                  className="flex gap-2 px-3 py-2 items-center"
+                  className={({ isActive }) =>
+                    `flex gap-2 px-3 py-2  items-center ${
+                      isActive
+                        ? "bg-[#CAEB66] text-[#03373D] font-semibold rounded-xl"
+                        : "text-[#606060] hover:bg-gray-100 hover:text-[#03373D]"
+                    }`
+                  }
                 >
                   <span className="text-xl"> {menu?.icon}</span>
                   <span className="text-sm text-[#606060] font-medium">
@@ -133,15 +150,31 @@ const DashboardLayout = () => {
                 </NavLink>
               </li>
             ))}
+            {/* লগআউট (সাইডবারের নিচে) */}
+            <li className="mt-6 border-t border-gray-200 pt-4">
+              <button
+                onClick={() => setOpen(false)}
+                onClick={handleLogout}
+                className="flex gap-2 px-3 py-2 items-center w-full rounded-lg text-[#606060] hover:bg-red-50 hover:text-red-500 transition-all duration-200"
+              >
+                <span className="text-xl">
+                  <HiOutlineArrowRightOnRectangle />
+                </span>
+                <span className="text-sm font-medium">Logout</span>
+              </button>
+            </li>
           </ul>
         </nav>
       </aside>
 
       {/* ===== Main Content ===== */}
       <div className="flex-1 flex-col min-h-screen ">
-        <header className="flex justify-between items-center  bg-white">
+        <header className="flex justify-between items-center sticky shadow-sm z-30 py-4  bg-white">
           <div>
-            <button onClick={() => setOpen(true)} className="py-6 p-8">
+            <button
+              onClick={() => setOpen(true)}
+              className="py-6 p-8  lg:hidden"
+            >
               <AiOutlineAlignLeft className="text-2xl text-[#303030]" />
             </button>
           </div>
