@@ -53,6 +53,13 @@ const NavBar = () => {
           Be a Rider
         </NavLink>
       </li>
+      {user && (
+        <li>
+          <NavLink className={navStyle} to={"/dashboard/myParcels"}>
+            My Parcels
+          </NavLink>
+        </li>
+      )}
     </>
   );
 

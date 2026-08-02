@@ -12,6 +12,7 @@ import Rider from "../Pages/rider/Rider";
 import SendPercel from "../Pages/SendPercel/SendPercel";
 import DashboardLayout from "../layout/DashboardLayout";
 import MyParcels from "../Pages/dashboard/myParcels/MyParcels";
+import Details from "../Pages/dashboard/Details/Details";
 
 const Router = createBrowserRouter([
   {
@@ -75,7 +76,17 @@ const Router = createBrowserRouter([
         <DashboardLayout></DashboardLayout>
       </PrivateRoute>
     ),
-    children: [{ path: "myParcels", element: <MyParcels></MyParcels> }],
+    children: [
+      { path: "myParcels", element: <MyParcels></MyParcels> },
+      {
+        path: "details/:id",
+        element: <Details></Details>,
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/parcels/${params.id}`).then((res) =>
+            res.json(),
+          ),
+      },
+    ],
   },
 ]);
 

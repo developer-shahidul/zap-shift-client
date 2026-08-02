@@ -50,6 +50,8 @@ const SendPercel = () => {
         cost = minCharage + extraCharge;
       }
     }
+    data.cost = cost;
+
     console.log("cost", cost);
     Swal.fire({
       title: "Agree with the cost?",
@@ -209,7 +211,7 @@ const SendPercel = () => {
                   type="text"
                   placeholder="Address"
                   className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
-                  {...register("address", {
+                  {...register("senderAddress", {
                     required: true,
                   })}
                 />
