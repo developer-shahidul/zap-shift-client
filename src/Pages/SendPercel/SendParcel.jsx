@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
 
-const SendPercel = () => {
+const SendParcel = () => {
   const {
     register,
     handleSubmit,
@@ -30,20 +30,20 @@ const SendPercel = () => {
     return districts;
   };
 
-  const handleSendPercel = (data) => {
-    const isDocument = data.percelType === "document";
+  const handleSendParcel = (data) => {
+    const isDocument = data.parcelType === "document";
     const isSameDistrict = data.senderDistrict === data.receiverDistrict;
-    const percelWeight = parseFloat(data.percelWeight);
+    const parcelWeight = parseFloat(data.parcelWeight);
 
     let cost = 0;
     if (isDocument) {
       cost = isSameDistrict ? 60 : 80;
     } else {
-      if (percelWeight < 3) {
+      if (parcelWeight < 3) {
         cost = isSameDistrict ? 110 : 150;
       } else {
         const minCharage = isSameDistrict ? 110 : 150;
-        const extraWeight = percelWeight - 3;
+        const extraWeight = parcelWeight - 3;
         const extraCharge = isSameDistrict
           ? extraWeight * 40
           : extraWeight * 80;
@@ -89,13 +89,13 @@ const SendPercel = () => {
         {/* devider */}
         <div className="divider my-7.5"></div>
 
-        <form onSubmit={handleSubmit(handleSendPercel)}>
-          {/* percel type */}
+        <form onSubmit={handleSubmit(handleSendParcel)}>
+          {/* parcel type */}
           <div className="my-7.5 flex">
             <label className="level text-[16px] font-semibold mr-12.5 flex items-center">
               <input
                 type="radio"
-                {...register("percelType", {
+                {...register("parcelType", {
                   required: "true",
                 })}
                 value="document"
@@ -108,7 +108,7 @@ const SendPercel = () => {
             <label className="level text-[16px] font-semibold flex items-center">
               <input
                 type="radio"
-                {...register("percelType", {
+                {...register("parcelType", {
                   required: "true",
                 })}
                 value="non-document"
@@ -117,12 +117,12 @@ const SendPercel = () => {
               <span className="ml-[2.5px]"> Non-Document</span>
             </label>
 
-            {errors.percelType?.type === "required" && (
+            {errors.parcelType?.type === "required" && (
               <p className="text-red-500 text-sm mt-1">Name is required</p>
             )}
           </div>
 
-          {/* percel info : name , weight */}
+          {/* parcel info : name , weight */}
           <div className="md:flex items-center gap-7.5 ">
             {/* Name */}
             <div className="w-full">
@@ -133,7 +133,7 @@ const SendPercel = () => {
                 type="text"
                 placeholder="Parcel Name"
                 className="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
-                {...register("percelName", {
+                {...register("parcelName", {
                   required: true,
                 })}
               />
@@ -147,16 +147,16 @@ const SendPercel = () => {
                 placeholder="Parcel Weight (KG)
 "
                 className="w-full mt-1  px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400 border-gray-300"
-                {...register("percelWeight", {
+                {...register("parcelWeight", {
                   required: true,
                 })}
               />
             </div>
 
-            {errors.percelName?.type === "required" && (
+            {errors.parcelName?.type === "required" && (
               <p className="text-red-500 text-sm mt-1">Name is required</p>
             )}
-            {errors.percelWeight?.type === "required" && (
+            {errors.parcelWeight?.type === "required" && (
               <p className="text-red-500 text-sm mt-1">Name is required</p>
             )}
           </div>
@@ -422,4 +422,4 @@ const SendPercel = () => {
   );
 };
 
-export default SendPercel;
+export default SendParcel;

@@ -9,10 +9,11 @@ import Login from "../Pages/Auth/Login/Login";
 import Register from "../Pages/Auth/Login/Register/Register";
 import PrivateRoute from "../routes/PrivateRoute";
 import Rider from "../Pages/rider/Rider";
-import SendPercel from "../Pages/SendPercel/SendPercel";
+import SendPercel from "../Pages/SendPercel/SendParcel";
 import DashboardLayout from "../layout/DashboardLayout";
 import MyParcels from "../Pages/dashboard/myParcels/MyParcels";
 import Details from "../Pages/dashboard/Details/Details";
+import Payment from "../Pages/dashboard/Payment/Payment";
 
 const Router = createBrowserRouter([
   {
@@ -85,6 +86,10 @@ const Router = createBrowserRouter([
           fetch(`http://localhost:5000/parcels/${params.id}`).then((res) =>
             res.json(),
           ),
+      },
+      {
+        path: "payment/:id",
+        element: <Payment></Payment>,
       },
     ],
   },

@@ -19,6 +19,32 @@ const MyParcels = () => {
     },
   });
 
+  const handlePayment = async (parcel) => {
+    // console.log(parcel);
+    try {
+      const paymentInfo = {
+        parcelId: parcel._id,
+        parcelName: parcel.parcelName,
+        cost: parcel.cost,
+        senderEmail: parcel.senderEmail,
+      };
+
+      const res = await axiosSecure.post(
+        "/create-checkout-session",
+        paymentInfo,
+      );
+
+      console.log(res.data);
+    } catch (error) {
+      console.error("Payment error:", error);
+      Swal.fire({
+        title: "Payment Failed",
+        text: "Something went wrong!",
+        icon: "error",
+      });
+    }
+  };
+
   const handleDelete = (id) => {
     console.log(id);
     Swal.fire({
@@ -124,9 +150,15 @@ const MyParcels = () => {
                     <p className="text-[#0AB010]">paid</p>
                   </td>
                   <td className="space-x-2.5">
-                    <button className="py-2 px-4 rounded-md bg-[#CAEB66] font-medium cursor-pointer">
-                      Pay
-                    </button>
+                    <Link to={`/dashboard/payment/${parcel._id}`}>
+                      <button
+                        onClick={() => handlePayment(parcel)}
+                        className="py-2 px-4 rounded-md bg-[#CAEB66] font-medium cursor-pointer"
+                      >
+                        Pay
+                      </button>
+                    </Link>
+
                     <Link to={`/dashboard/details/${parcel._id}`}>
                       <button className="py-2 px-4 rounded-md bg-[#94C6CB22] font-medium cursor-pointer">
                         View
