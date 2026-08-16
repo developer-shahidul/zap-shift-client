@@ -29,7 +29,7 @@ const DashboardLayout = () => {
       label: "Dashboard",
     },
     {
-      path: "/dashboard/deliveries",
+      path: "/dashboard/myParcels",
       icon: <TbTruckDelivery />,
       label: "All Deliveries",
     },
@@ -107,10 +107,11 @@ const DashboardLayout = () => {
               <li key={menu?.label}>
                 <NavLink
                   to={menu?.path}
+                  end={menu.path === "/dashboard"}
                   onClick={() => setOpen(false)}
                   className={({ isActive }) =>
                     `flex gap-2 px-3 py-2 items-center
-                  ${
+                  ${     
                     isActive
                       ? "bg-[#CAEB66] text-[#03373D] font-semibold rounded-xl"
                       : "text-[#606060] hover:bg-gray-100 hover:text-[#03373D]"
@@ -135,6 +136,7 @@ const DashboardLayout = () => {
                 <NavLink
                   onClick={() => setOpen(false)}
                   to={menu?.path}
+                  end
                   className={({ isActive }) =>
                     `flex gap-2 px-3 py-2  items-center ${
                       isActive
@@ -153,8 +155,10 @@ const DashboardLayout = () => {
             {/* লগআউট (সাইডবারের নিচে) */}
             <li className="mt-6 border-t border-gray-200 pt-4">
               <button
-                onClick={() => setOpen(false)}
-                onClick={handleLogout}
+                onClick={() => {
+                  setOpen(false);
+                  handleLogout();
+                }}
                 className="flex gap-2 px-3 py-2 items-center w-full rounded-lg text-[#606060] hover:bg-red-50 hover:text-red-500 transition-all duration-200"
               >
                 <span className="text-xl">

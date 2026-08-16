@@ -35,6 +35,7 @@ const MyParcels = () => {
       );
 
       console.log(res.data);
+      window.location.assign(res.data.url);
     } catch (error) {
       console.error("Payment error:", error);
       Swal.fire({
@@ -150,7 +151,7 @@ const MyParcels = () => {
                     <p className="text-[#0AB010]">paid</p>
                   </td>
                   <td className="space-x-2.5">
-                    <Link to={`/dashboard/payment/${parcel._id}`}>
+                    <Link to={"/dashboard/payment-success"}>
                       <button
                         onClick={() => handlePayment(parcel)}
                         className="py-2 px-4 rounded-md bg-[#CAEB66] font-medium cursor-pointer"
