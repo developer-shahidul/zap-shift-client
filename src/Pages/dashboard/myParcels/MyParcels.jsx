@@ -46,6 +46,36 @@ const MyParcels = () => {
     }
   };
 
+  const handleDeliveryStatus = (id, status) => {
+    const value = status.target.value;
+
+    axiosSecure
+      .patch(`/parcels/${id}`, {
+        deliveryStatus: value,
+      })
+      .then((res) => {
+        console.log(res.data);
+
+        Swal.fire({
+          icon: "success",
+          title: "Status Updated!",
+          text: `Delivery status changed to ${value}`,
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        refetch();
+      })
+      .catch((error) => {
+        console.log(error);
+
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed!",
+          text: "Failed to update delivery status.",
+        });
+      });
+  };
+
   const handleDelete = (id) => {
     console.log(id);
     Swal.fire({
@@ -123,6 +153,7 @@ const MyParcels = () => {
                 <th>_id</th>
                 <th>Store</th>
                 <th>Recipient Info</th>
+                <th>Delivery Status</th>
                 <th>Amount</th>
                 <th>Payment</th>
                 <th>Action</th>
@@ -143,6 +174,35 @@ const MyParcels = () => {
                     <p>{parcel.receiverPhoneNo}</p>
                   </td>
                   <td>
+                    <select
+                      value={parcel.deliveryStatus}
+                      className="border-none"
+                      onChange={(status) =>
+                        handleDeliveryStatus(parcel._id, status)
+                      }
+                    >
+                      <option className="text-yellow-500" value="pending">
+                        Pending
+                      </option>
+
+                      <option className="text-orange-500" value="return">
+                        Return
+                      </option>
+
+                      <option className="text-green-500" value="delivered">
+                        Delivered
+                      </option>
+
+                      <option className="text-red-500" value="canceled">
+                        Canceled
+                      </option>
+
+                      <option className="text-red-600" value="refused">
+                        Refused
+                      </option>
+                    </select>
+                  </td>
+                  <td>
                     <p>COD tk {parcel.cost}.</p>
                     <p>Charge tk 00.</p>
                     <p>Discount tk 00.</p>
@@ -151,14 +211,12 @@ const MyParcels = () => {
                     <p className="text-[#0AB010]">paid</p>
                   </td>
                   <td className="space-x-2.5">
-                    <Link to={"/dashboard/payment-success"}>
-                      <button
-                        onClick={() => handlePayment(parcel)}
-                        className="py-2 px-4 rounded-md bg-[#CAEB66] font-medium cursor-pointer"
-                      >
-                        Pay
-                      </button>
-                    </Link>
+                    <button
+                      onClick={() => handlePayment(parcel)}
+                      className="py-2 px-4 rounded-md bg-[#CAEB66] font-medium cursor-pointer"
+                    >
+                      Pay
+                    </button>
 
                     <Link to={`/dashboard/details/${parcel._id}`}>
                       <button className="py-2 px-4 rounded-md bg-[#94C6CB22] font-medium cursor-pointer">

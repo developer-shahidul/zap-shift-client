@@ -1,7 +1,24 @@
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { FaCheckCircle, FaArrowRight, FaHome } from "react-icons/fa";
+import { useEffect } from "react";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const PaymentSuccess = () => {
+  const axiosSecure = useAxiosSecure();
+  const [searchParams] = useSearchParams();
+  const sessionId = searchParams.get("session_id");
+  console.log(sessionId);
+
+  useEffect(() => {
+    if (sessionId) {
+      axiosSecure
+        .patch(
+          `/create-checkout-session/payment-success?session_id=${sessionId}`,
+        )
+        .then((res) => console.log(res.data));
+    }
+  }, [sessionId, axiosSecure]);
+
   return (
     <div className="min-h-[70vh] flex items-center justify-center p-6">
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-lg p-8 md:p-12 text-center">
