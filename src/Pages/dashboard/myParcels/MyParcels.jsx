@@ -173,32 +173,36 @@ const MyParcels = () => {
                     </p>
                     <p>{parcel.receiverPhoneNo}</p>
                   </td>
+
+                  {/* deliveryStatus */}
                   <td>
                     <select
-                      value={parcel.deliveryStatus}
+                      value={parcel.deliveryStatus || "Pending"}
                       className="border-none"
                       onChange={(status) =>
                         handleDeliveryStatus(parcel._id, status)
                       }
                     >
-                      <option className="text-yellow-500" value="pending">
+                      <option className="text-yellow-500" value="Pending">
                         Pending
                       </option>
 
-                      <option className="text-orange-500" value="return">
-                        Return
+                      <option className="text-orange-500" value="Paid Return">
+                        Paid Return
                       </option>
 
-                      <option className="text-green-500" value="delivered">
-                        Delivered
+                      {parcel.paymentStatus === "paid" && (
+                        <option className="text-yellow-500" value="delivered">
+                          Delivered
+                        </option>
+                      )}
+
+                      <option className="text-red-500" value="Cancelled">
+                        Cancelled
                       </option>
 
-                      <option className="text-red-500" value="canceled">
-                        Canceled
-                      </option>
-
-                      <option className="text-red-600" value="refused">
-                        Refused
+                      <option className="text-red-600" value="Refunded">
+                        Refunded
                       </option>
                     </select>
                   </td>
@@ -207,12 +211,41 @@ const MyParcels = () => {
                     <p>Charge tk 00.</p>
                     <p>Discount tk 00.</p>
                   </td>
+
+                  {/* paymentStatus */}
                   <td>
-                    <p className="text-[#0AB010]">paid</p>
+                    <p
+                      className={
+                        parcel.paymentStatus === "paid" ||
+                        parcel.paymentStatus === "overdue"
+                          ? "text-[#0AB010]"
+                          : "text-[#F59E0B]"
+                      }
+                    >
+                      {parcel.paymentStatus === "paid"
+                        ? "Paid"
+                        : parcel.deliveryStatus === "Panding"
+                          ? "Panding"
+                          : parcel.deliveryStatus === "Cancelled"
+                            ? "Overdue"
+                            : parcel.deliveryStatus === "Refunded"
+                              ? "Refunded"
+                              : parcel.deliveryStatus === "Paid Return"
+                                ? "Unpaid"
+                                : parcel.deliveryStatus === "Delivered"
+                                  ? "Paid"
+                                  : "Panding"}
+                    </p>
                   </td>
                   <td className="space-x-2.5">
                     <button
                       onClick={() => handlePayment(parcel)}
+                      disabled={
+                        parcel.paymentStatus === "paid" ||
+                        parcel.Panding === "Panding" ||
+                        parcel.Cancelled === "overdue" ||
+                        "refunded"
+                      }
                       className="py-2 px-4 rounded-md bg-[#CAEB66] font-medium cursor-pointer"
                     >
                       Pay
