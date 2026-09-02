@@ -6,10 +6,12 @@ import { TbTruckReturn } from "react-icons/tb";
 import { MdPaid } from "react-icons/md";
 import { Link } from "react-router";
 import Swal from "sweetalert2";
+import { useState } from "react";
 
 const MyParcels = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const [parcelState, setParcelState] = useState({});
 
   const { data: parcels = [], refetch } = useQuery({
     queryKey: ["MyParcels", user?.email],
@@ -20,13 +22,11 @@ const MyParcels = () => {
   });
 
   // Parcel State Count
-  const { data: parcelState = {} } = useQuery({
-    queryKey: ["stats-count"],
-    queryFn: async () => {
-      const res = await axiosSecure("/parcels/stats-count");
-      return res.data;
-    },
-  });
+  const getParcelState = () => {
+    axiosSecure.get("/parcels/stats-count").then((res) => {
+      setParcelState(res.data);
+    });
+  };
 
   const handlePayment = async (parcel) => {
     // console.log(parcel);
@@ -73,6 +73,9 @@ const MyParcels = () => {
           showConfirmButton: false,
         });
         refetch();
+
+        // stateCount
+        getParcelState();
       })
       .catch((error) => {
         console.log(error);
@@ -122,7 +125,7 @@ const MyParcels = () => {
           <div className="w-40">
             <h4 className="mb-2 text-gray-700 text-sm font-medium">Total</h4>
             <h4 className="font-bold text-gray-800 text-4xl">
-              {parcelState.total}
+              {parcelState?.total || 0}
             </h4>
           </div>
         </div>
@@ -148,7 +151,7 @@ const MyParcels = () => {
               Paid Return
             </h4>
             <h4 className="font-bold text-gray-800 text-4xl">
-              {parcelState.PaidReturn || 0}
+              {parcelState?.PaidReturn || 0}
             </h4>
           </div>
         </div>
