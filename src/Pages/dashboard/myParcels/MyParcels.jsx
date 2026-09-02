@@ -19,6 +19,15 @@ const MyParcels = () => {
     },
   });
 
+  // Parcel State Count
+  const { data: parcelState = {} } = useQuery({
+    queryKey: ["stats-count"],
+    queryFn: async () => {
+      const res = await axiosSecure("/parcels/stats-count");
+      return res.data;
+    },
+  });
+
   const handlePayment = async (parcel) => {
     // console.log(parcel);
     try {
@@ -113,7 +122,7 @@ const MyParcels = () => {
           <div className="w-40">
             <h4 className="mb-2 text-gray-700 text-sm font-medium">Total</h4>
             <h4 className="font-bold text-gray-800 text-4xl">
-              {parcels.length}
+              {parcelState.total}
             </h4>
           </div>
         </div>
@@ -139,7 +148,7 @@ const MyParcels = () => {
               Paid Return
             </h4>
             <h4 className="font-bold text-gray-800 text-4xl">
-              {parcels.length}
+              {parcelState.PaidReturn || 0}
             </h4>
           </div>
         </div>
@@ -224,8 +233,8 @@ const MyParcels = () => {
                     >
                       {parcel.paymentStatus === "paid"
                         ? "Paid"
-                        : parcel.deliveryStatus === "Panding"
-                          ? "Panding"
+                        : parcel.deliveryStatus === "Pending"
+                          ? "Pending"
                           : parcel.deliveryStatus === "Cancelled"
                             ? "Overdue"
                             : parcel.deliveryStatus === "Refunded"
@@ -242,11 +251,18 @@ const MyParcels = () => {
                       onClick={() => handlePayment(parcel)}
                       disabled={
                         parcel.paymentStatus === "paid" ||
-                        parcel.Panding === "Panding" ||
-                        parcel.Cancelled === "overdue" ||
-                        "refunded"
+                        parcel.deliveryStatus === "Paid Return" ||
+                        parcel.deliveryStatus === "Cancelled" ||
+                        parcel.deliveryStatus === "Refunded"
                       }
-                      className="py-2 px-4 rounded-md bg-[#CAEB66] font-medium cursor-pointer"
+                      className={`py-2 px-4 rounded-md font-medium ${
+                        parcel.paymentStatus === "paid" ||
+                        parcel.deliveryStatus === "Paid Return" ||
+                        parcel.deliveryStatus === "Cancelled" ||
+                        parcel.deliveryStatus === "Refunded"
+                          ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                          : "bg-[#CAEB66] cursor-pointer"
+                      }`}
                     >
                       Pay
                     </button>
